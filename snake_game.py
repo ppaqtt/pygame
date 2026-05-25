@@ -1,5 +1,8 @@
 import pygame
 import os
+import random
+
+pygame.init()
 
 # 尝试使用中文字体
 def get_chinese_font(size):
@@ -15,16 +18,7 @@ def get_chinese_font(size):
         if os.path.exists(font_name):
             try:
                 return pygame.font.Font(font_name, size)
-                continue
-    return pygame.font.Font(None, size)
-
-import os
-import random
-
-pygame.init()
-
-
-
+            except:
                 continue
     return pygame.font.Font(None, size)
 
@@ -42,6 +36,7 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("贪吃蛇游戏")
 
 clock = pygame.time.Clock()
+font = get_chinese_font(30)
 
 def draw_snake(snake):
     for segment in snake:
@@ -56,15 +51,16 @@ def get_new_food(snake):
         if food not in snake:
             return food
 
-def snake_game():
+def main():
     snake = [(GRID_WIDTH // 2, GRID_HEIGHT // 2)]
     direction = (1, 0)
     food = get_new_food(snake)
+    score = 0
     game_over = False
-    
+
     while not game_over:
         screen.fill(BLACK)
-        
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -78,27 +74,38 @@ def snake_game():
                     direction = (-1, 0)
                 elif event.key == pygame.K_RIGHT and direction != (-1, 0):
                     direction = (1, 0)
-        
-        head = (snake[0][0] + direction[0], snake[0][1] + direction[1])
-        
-        if head[0] < 0 or head[0] >= GRID_WIDTH or head[1] < 0 or head[1] >= GRID_HEIGHT:
-            game_over = True
-        if head in snake:
-            game_over = True
-        
-        snake.insert(0, head)
-        
-        if head == food:
-            food = get_new_food(snake)
-        else:
-            snake.pop()
-        
+
+        if not game_over:
+            head_x, head_y = snake[0]
+            new_head = (head_x + direction[0], head_y + direction[1])
+
+            if new_head in snake or new_head[0] < 0 or new_head[0] >= GRID_WIDTH or new_head[1] < 0 or new_head[1] >= GRID_HEIGHT:
+                game_over = True
+            else:
+                snake.insert(0, new_head)
+                if new_head == food:
+                    score += 10
+                    food = get_new_food(snake)
+                else:
+                    snake.pop()
+
         draw_snake(snake)
         draw_food(food)
-        pygame.display.update()
+
+        score_text = font.render(f"分数: {score}", True, WHITE)
+        screen.blit(score_text, (10, 10))
+
+        if game_over:
+            game_over_text = font.render("游戏结束! 按R重新开始", True, RED)
+            text_rect = game_over_text.get_rect(center=(WIDTH // 2, HEIGHT // 2))
+            screen.blit(game_over_text, text_rect)
+            for event in pygame.event.get():
+                if event.type == pygame.KEYDOWN and event.key == pygame.K_r:
+                    main()
+                    return
+
+        pygame.display.flip()
         clock.tick(10)
-    
-    pygame.quit()
 
 if __name__ == "__main__":
-    snake_game()
+    main()

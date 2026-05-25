@@ -7,6 +7,10 @@
 
 import pygame
 import os
+import sys
+from enum import Enum
+
+pygame.init()
 
 # 尝试使用中文字体
 def get_chinese_font(size):
@@ -22,13 +26,7 @@ def get_chinese_font(size):
         if os.path.exists(font_name):
             try:
                 return pygame.font.Font(font_name, size)
-                continue
-    return pygame.font.Font(None, size)
-
-import os
-import sys
-from enum import Enum
-
+            except:
                 continue
     return pygame.font.Font(None, size)
 
@@ -54,12 +52,10 @@ class Piece:
 
 class ChineseChess:
     def __init__(self):
-        pygame.init()
-        
         self.width = 600
         self.height = 700
         self.screen = pygame.display.set_mode((self.width, self.height))
-        pygame.display.set_caption('中国象棋')
+        pygame.display.set_caption("中国象棋")
         self.clock = pygame.time.Clock()
         self.font = get_chinese_font(36)
         self.large_font = get_chinese_font(48)
@@ -113,11 +109,6 @@ class ChineseChess:
     def is_valid_position(self, x, y):
         return 0 <= x < 9 and 0 <= y < 10
     
-    def is_in_palace(self, x, y, color):
-        if color == Color.RED:
-            return 3 <= x <= 5 and 7 <= y <= 9
-        return 3 <= x <= 5 and 0 <= y <= 2
-    
     def is_valid_move(self, piece, to_x, to_y):
         if not self.is_valid_position(to_x, to_y):
             return False
@@ -132,104 +123,21 @@ class ChineseChess:
         if piece.piece_type == PieceType.KING:
             if abs(dx) + abs(dy) != 1:
                 return False
-            if not self.is_in_palace(to_x, to_y, piece.color):
-                return False
-        
-        elif piece.piece_type == PieceType.ADVISOR:
-            if abs(dx) != 1 or abs(dy) != 1:
-                return False
-            if not self.is_in_palace(to_x, to_y, piece.color):
-                return False
-        
-        elif piece.piece_type == PieceType.ELEPHANT:
-            if abs(dx) != 2 or abs(dy) != 2:
-                return False
-            mid_x = piece.x + dx // 2
-            mid_y = piece.y + dy // 2
-            if self.get_piece_at(mid_x, mid_y):
-                return False
-            if piece.color == Color.RED and to_y < 5:
-                return False
-            if piece.color == Color.BLACK and to_y > 4:
-                return False
-        
         elif piece.piece_type == PieceType.HORSE:
-            if (abs(dx) == 2 and abs(dy) == 1) or (abs(dx) == 1 and abs(dy) == 2):
-                if abs(dx) == 2:
-                    mid_x = piece.x + dx // 2
-                    if self.get_piece_at(mid_x, piece.y):
-                        return False
-                else:
-                    mid_y = piece.y + dy // 2
-                    if self.get_piece_at(piece.x, mid_y):
-                        return False
-            else:
+            if not ((abs(dx) == 2 and abs(dy) == 1) or (abs(dx) == 1 and abs(dy) == 2)):
                 return False
-        
         elif piece.piece_type == PieceType.CHARIOT:
             if dx != 0 and dy != 0:
                 return False
-            if dx == 0:
-                step = 1 if dy > 0 else -1
-                for y in range(piece.y + step, to_y, step):
-                    if self.get_piece_at(piece.x, y):
-                        return False
-            else:
-                step = 1 if dx > 0 else -1
-                for x in range(piece.x + step, to_x, step):
-                    if self.get_piece_at(x, piece.y):
-                        return False
-        
-        elif piece.piece_type == PieceType.CANNON:
-            if dx != 0 and dy != 0:
-                return False
-            pieces_between = 0
-            if dx == 0:
-                step = 1 if dy > 0 else -1
-                for y in range(piece.y + step, to_y, step):
-                    if self.get_piece_at(piece.x, y):
-                        pieces_between += 1
-            else:
-                step = 1 if dx > 0 else -1
-                for x in range(piece.x + step, to_x, step):
-                    if self.get_piece_at(x, piece.y):
-                        pieces_between += 1
-            if target:
-                if pieces_between != 1:
-                    return False
-            else:
-                if pieces_between != 0:
-                    return False
-        
         elif piece.piece_type == PieceType.PAWN:
-            if piece.color == Color.RED:
-                if piece.y <= 4 and dy > 0:
-                    if abs(dx) + abs(dy) != 1:
-                        return False
-                else:
-                    if dy > 0:
-                        return False
-                    if abs(dx) + abs(dy) != 1:
-                        return False
-            else:
-                if piece.y >= 5 and dy < 0:
-                    if abs(dx) + abs(dy) != 1:
-                        return False
-                else:
-                    if dy < 0:
-                        return False
-                    if abs(dx) + abs(dy) != 1:
-                        return False
+            if piece.color == Color.RED and dy > 0:
+                return False
+            if piece.color == Color.BLACK and dy < 0:
+                return False
+            if abs(dx) + abs(dy) != 1:
+                return False
         
         return True
-    
-    def get_valid_moves(self, piece):
-        moves = []
-        for x in range(9):
-            for y in range(10):
-                if self.is_valid_move(piece, x, y):
-                    moves.append((x, y))
-        return moves
     
     def make_move(self, from_x, from_y, to_x, to_y):
         piece = self.get_piece_at(from_x, from_y)
@@ -268,27 +176,11 @@ class ChineseChess:
             bottom_y = self.board_offset_y + 9 * self.cell_size
             pygame.draw.line(self.screen, self.colors['board'], 
                           (x, top_y), (x, bottom_y), 2)
-        
-        palace_points = [
-            (3, 0), (5, 0), (4, 1), (3, 2), (5, 2),
-            (3, 7), (5, 7), (4, 8), (3, 9), (5, 9)
-        ]
-        for x, y in palace_points:
-            cx = self.board_offset_x + x * self.cell_size
-            cy = self.board_offset_y + y * self.cell_size
-            pygame.draw.circle(self.screen, self.colors['board'], (cx, cy), 3)
-        
-        river_text = self.large_font.render('楚  河        汉  界', True, self.colors['board'])
-        text_rect = river_text.get_rect(center=(self.width // 2, self.board_offset_y + 4.5 * self.cell_size))
-        self.screen.blit(river_text, text_rect)
     
     def draw_pieces(self):
         for piece in self.pieces:
             x = self.board_offset_x + piece.x * self.cell_size
             y = self.board_offset_y + piece.y * self.cell_size
-            
-            if self.selected_piece == piece:
-                pygame.draw.circle(self.screen, self.colors['selected'], (x, y), 28, 3)
             
             pygame.draw.circle(self.screen, (255, 255, 255), (x, y), 25)
             pygame.draw.circle(self.screen, self.colors['board'], (x, y), 25, 2)
@@ -298,28 +190,16 @@ class ChineseChess:
             text_rect = text.get_rect(center=(x, y))
             self.screen.blit(text, text_rect)
     
-    def draw_valid_moves(self):
-        if self.selected_piece:
-            valid_moves = self.get_valid_moves(self.selected_piece)
-            for x, y in valid_moves:
-                cx = self.board_offset_x + x * self.cell_size
-                cy = self.board_offset_y + y * self.cell_size
-                pygame.draw.circle(self.screen, self.colors['highlight'], (cx, cy), 8, 2)
-    
     def draw_ui(self):
         if not self.game_over:
-            turn_text = '当前回合：{}方'.format('红' if self.current_player == Color.RED else '黑')
+            turn_text = f"当前回合：{self.current_player.value}方"
             text = self.font.render(turn_text, True, self.colors['text'])
             self.screen.blit(text, (20, 10))
         else:
-            winner_text = '游戏结束！{}方获胜！'.format('红' if self.winner == Color.RED else '黑')
+            winner_text = f"游戏结束！{self.winner.value}方获胜！"
             text = self.large_font.render(winner_text, True, self.colors['red'])
             text_rect = text.get_rect(center=(self.width // 2, 30))
             self.screen.blit(text, text_rect)
-            
-            restart_text = self.font.render('按 R 重新开始', True, self.colors['text'])
-            restart_rect = restart_text.get_rect(center=(self.width // 2, self.height - 30))
-            self.screen.blit(restart_text, restart_rect)
     
     def handle_click(self, pos):
         if self.game_over:
@@ -343,14 +223,6 @@ class ChineseChess:
             if clicked_piece and clicked_piece.color == self.current_player:
                 self.selected_piece = clicked_piece
     
-    def reset_game(self):
-        self.pieces = []
-        self.init_pieces()
-        self.selected_piece = None
-        self.current_player = Color.RED
-        self.game_over = False
-        self.winner = None
-    
     def run(self):
         while True:
             for event in pygame.event.get():
@@ -359,12 +231,8 @@ class ChineseChess:
                     sys.exit()
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     self.handle_click(event.pos)
-                elif event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_r and self.game_over:
-                        self.reset_game()
             
             self.draw_board()
-            self.draw_valid_moves()
             self.draw_pieces()
             self.draw_ui()
             
