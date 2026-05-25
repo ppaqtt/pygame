@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+
+                continue
+    return pygame.font.Font(None, size)
+
+
 """
 编程入门学习游戏
 使用pygame实现的编程基础教学游戏
@@ -7,20 +12,6 @@
 
 import pygame
 import os
-import sys
-
-class Lesson:
-    def __init__(self, title, description, code, expected, hint):
-        self.title = title
-        self.description = description
-        self.code = code
-        self.expected = expected
-        self.hint = hint
-
-class ProgrammingTutor:
-    def __init__(self):
-        pygame.init()
-        
 
 # 尝试使用中文字体
 def get_chinese_font(size):
@@ -36,9 +27,31 @@ def get_chinese_font(size):
         if os.path.exists(font_name):
             try:
                 return pygame.font.Font(font_name, size)
-            except:
                 continue
-    return get_chinese_font(size)
+    return pygame.font.Font(None, size)
+
+import os
+import sys
+
+                continue
+    return pygame.font.Font(None, size)
+
+
+class Lesson:
+    def __init__(self, title, description, code, expected, hint):
+        self.title = title
+        self.description = description
+        self.code = code
+        self.expected = expected
+        self.hint = hint
+
+class ProgrammingTutor:
+    def __init__(self):
+        pygame.init()
+        
+
+                continue
+    return pygame.font.Font(None, size)
 
 self.width = 950
         self.height = 700
@@ -158,7 +171,6 @@ self.width = 950
             if result is None:
                 try:
                     result = eval(code)
-                except:
                     pass
             
             if result is not None:

@@ -1,10 +1,5 @@
 import pygame
 import os
-import random
-
-pygame.init()
-
-
 
 # 尝试使用中文字体
 def get_chinese_font(size):
@@ -20,9 +15,18 @@ def get_chinese_font(size):
         if os.path.exists(font_name):
             try:
                 return pygame.font.Font(font_name, size)
-            except:
                 continue
-    return get_chinese_font(size)
+    return pygame.font.Font(None, size)
+
+import os
+import random
+
+pygame.init()
+
+
+
+                continue
+    return pygame.font.Font(None, size)
 
 WIDTH, HEIGHT = 800, 600
 GRID_SIZE = 20

@@ -35,7 +35,7 @@ def get_chinese_font(size):
                 return pygame.font.Font(font_name, size)
             except:
                 continue
-    return get_chinese_font(size)
+    return pygame.font.Font(None, size)
 
 # 颜色定义
 WHITE = (255, 255, 255)

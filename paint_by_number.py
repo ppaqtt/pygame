@@ -24,7 +24,7 @@ def get_chinese_font(size):
                 return pygame.font.Font(font_name, size)
             except:
                 continue
-    return get_chinese_font(size)
+    return pygame.font.Font(None, size)
 
 SCREEN_WIDTH = 900
 SCREEN_HEIGHT = 700

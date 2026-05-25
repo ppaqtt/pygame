@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+
+                continue
+    return pygame.font.Font(None, size)
+
+
 """
 音乐可视化
 使用pygame实现的音频可视化游戏
@@ -7,22 +12,6 @@
 
 import pygame
 import os
-import sys
-import math
-import random
-
-class Bar:
-    def __init__(self, x, width, height):
-        self.x = x
-        self.width = width
-        self.height = height
-        self.target_height = height
-        self.color = (0, 0, 0)
-
-class MusicVisualizer:
-    def __init__(self):
-        pygame.init()
-        
 
 # 尝试使用中文字体
 def get_chinese_font(size):
@@ -38,9 +27,33 @@ def get_chinese_font(size):
         if os.path.exists(font_name):
             try:
                 return pygame.font.Font(font_name, size)
-            except:
                 continue
-    return get_chinese_font(size)
+    return pygame.font.Font(None, size)
+
+import os
+import sys
+import math
+import random
+
+                continue
+    return pygame.font.Font(None, size)
+
+
+class Bar:
+    def __init__(self, x, width, height):
+        self.x = x
+        self.width = width
+        self.height = height
+        self.target_height = height
+        self.color = (0, 0, 0)
+
+class MusicVisualizer:
+    def __init__(self):
+        pygame.init()
+        
+
+                continue
+    return pygame.font.Font(None, size)
 
 self.width = 900
         self.height = 600

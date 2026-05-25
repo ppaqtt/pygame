@@ -15,7 +15,7 @@ def get_chinese_font(size):
                 return pygame.font.Font(font_name, size)
             except:
                 continue
-    return get_chinese_font(size)
+    return pygame.font.Font(None, size)
 
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-

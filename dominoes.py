@@ -39,7 +39,7 @@ def get_chinese_font(size):
                 return pygame.font.Font(font_name, size)
             except:
                 continue
-    return get_chinese_font(size)
+    return pygame.font.Font(None, size)
 
 # 常量
 SCREEN_W, SCREEN_H = 1100, 750

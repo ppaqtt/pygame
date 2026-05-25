@@ -1,15 +1,5 @@
 import pygame
-import sys
 import os
-import struct
-from pygame.locals import *
-
-
-class PixelArtEditor:
-    def __init__(self):
-        pygame.init()
-        
-        
 
 # 尝试使用中文字体
 def get_chinese_font(size):
@@ -25,9 +15,32 @@ def get_chinese_font(size):
         if os.path.exists(font_name):
             try:
                 return pygame.font.Font(font_name, size)
-            except:
                 continue
-    return get_chinese_font(size)
+    return pygame.font.Font(None, size)
+
+import sys
+import os
+import struct
+from pygame.locals import *
+
+
+                continue
+    return pygame.font.Font(None, size)
+
+
+                continue
+    return pygame.font.Font(None, size)
+
+
+
+class PixelArtEditor:
+    def __init__(self):
+        pygame.init()
+        
+        
+
+                continue
+    return pygame.font.Font(None, size)
 
 self.SCREEN_WIDTH = 1000
         self.SCREEN_HEIGHT = 700
@@ -269,7 +282,6 @@ self.SCREEN_WIDTH = 1000
                     for x in range(self.GRID_SIZE):
                         self.canvas[y][x] = image.get_at((x, y))[:3]
                 print(f'图片已加载: {filename}')
-            except:
                 print('加载图片失败')
         else:
             print('未找到图片文件')

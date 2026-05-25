@@ -34,7 +34,7 @@ def get_chinese_font(size):
                 return pygame.font.Font(font_name, size)
             except:
                 continue
-    return get_chinese_font(size)
+    return pygame.font.Font(None, size)
 
 # 游戏常量
 SCREEN_WIDTH = 1200
@@ -73,7 +73,7 @@ def get_font(size):
             return pygame.font.Font(font_path, size)
         except:
             continue
-    return get_chinese_font(size)
+    return pygame.font.Font(None, size)
 
 class Detective:
     """侦探类"""

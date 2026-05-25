@@ -34,7 +34,7 @@ def get_chinese_font(size):
                 return pygame.font.Font(font_name, size)
             except:
                 continue
-    return get_chinese_font(size)
+    return pygame.font.Font(None, size)
 
 # 游戏常量
 SCREEN_WIDTH = 1200
@@ -67,7 +67,7 @@ def get_font(size):
         try:
             return pygame.font.Font("/usr/share/fonts/truetype/wqy/wqy-microhei.ttc", size)
         except:
-            return get_chinese_font(size)
+            return pygame.font.Font(None, size)
 
 class Player:
     """玩家角色类"""
